@@ -1,5 +1,3 @@
-require 'shoes/swt/swt_button'
-
 module Shoes
   module Qt
     class Button < ::Qt::PushButton
