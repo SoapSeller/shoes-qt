@@ -28,83 +28,83 @@ module Shoes
     class FlowLayout < ::Qt::Layout
       
       def initialize(parent = nil, spacing = -1)
-          super(parent)
-    #     setMargin(margin)
-          setSpacing(spacing)
+        super(parent)
+        #setMargin(margin)
+        setSpacing(spacing)
         @itemList = []
       end
       
       def addItem(item)
-          @itemList << item
+        @itemList << item
       end
       
       def count()
-          return @itemList.length()
+        return @itemList.length()
       end
       
       def itemAt(index)
-          return @itemList[index]
+        return @itemList[index]
       end
       
       def takeAt(index)
-          if index >= 0 && index < @itemList.length
-              return @itemList.delete_at(index)
-          else
-              return nil
+        if index >= 0 && index < @itemList.length
+            return @itemList.delete_at(index)
+        else
+            return nil
         end
       end
       
       def expandingDirections()
-          return 0
+        return 0
       end
       
       def hasHeightForWidth()
-          return true
+        return true
       end
       
       def heightForWidth(width)
-          height = doLayout(::Qt::Rect.new(0, 0, width, 0), true)
-          return height
+        height = doLayout(::Qt::Rect.new(0, 0, width, 0), true)
+        return height
       end
       
       def setGeometry(rect)
-          super(rect)
-          doLayout(rect, false)
+        super(rect)
+        doLayout(rect, false)
       end
       
       def sizeHint()
-          return minimumSize()
+        return minimumSize()
       end
       
       def minimumSize()
-          size = ::Qt::Size.new
+        size = ::Qt::Size.new
         @itemList.each { |item| size = size.expandedTo(item.minimumSize()) }
-          size += ::Qt::Size.new(2*margin(), 2*margin())
-          return size
+        size += ::Qt::Size.new(2*margin(), 2*margin())
+        return size
       end
       
       def doLayout(rect, testOnly)
-          x = rect.x
-          y = rect.y
-          lineHeight = 0
+        x = rect.x
+        y = rect.y
+        lineHeight = 0
       
         @itemList.each do |item|
+          nextX = x + item.sizeHint().width() + spacing()
+          if nextX - spacing() > rect.right() && lineHeight > 0
+              x = rect.x()
+              y = y + lineHeight + spacing()
               nextX = x + item.sizeHint().width() + spacing()
-              if nextX - spacing() > rect.right() && lineHeight > 0
-                  x = rect.x()
-                  y = y + lineHeight + spacing()
-                  nextX = x + item.sizeHint().width() + spacing()
-                  lineHeight = 0
-              end
+              lineHeight = 0
+          end
 
-              if !testOnly
-                  item.setGeometry(::Qt::Rect.new(::Qt::Point.new(x, y), item.sizeHint()))
+          if !testOnly
+            item.setGeometry(::Qt::Rect.new(::Qt::Point.new(x, y), item.sizeHint()))
           end
       
-              x = nextX
-              lineHeight = [lineHeight, item.sizeHint().height()].max
-          end
-          return y + lineHeight - rect.y()
+          x = nextX
+          lineHeight = [lineHeight, item.sizeHint().height()].max
+        end
+        return y + lineHeight - rect.y()
       end
     end
 

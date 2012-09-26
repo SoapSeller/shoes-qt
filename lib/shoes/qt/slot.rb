@@ -7,7 +7,7 @@ module Shoes
         if parent.class == App
           parent.main.setCentralWidget(self)
         else
-          parent.layout.addWidget(self)  
+          parent.layout.addWidget(self) 
         end
         
         super.layout = layout
@@ -24,6 +24,10 @@ module Shoes
       end
     end
 
-    class Stack < Slot; end
+    class Stack < Slot
+      def initialize(dsl, parent)
+        super(dsl, parent, ::Qt::VBoxLayout.new)
+      end
+    end
   end
 end
